@@ -4,6 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('./routes/authorization');
+var session = require('express-session');
+var flash = require('connect-flash');
 var pg = require('pg');
 var conString = "";
 
@@ -22,6 +25,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: '%I05V~N5U803}`GdLZFVi-_^KuSiZQ' }));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/signin',function(req,res,next){
+  res.render('signin',{message: req.flash("error")});
+});
 
 app.use('/', routes);
 

@@ -1,0 +1,81 @@
+-- dummy implementation of function ancestors in order to allow us to create diet table with specific constraint
+CREATE OR REPLACE FUNCTION ancestors(did integer) RETURNS integer[] AS $_$ BEGIN RETURN NULL; END; $_$ LANGUAGE plpgsql;
+
+--create table diet with constraint that diet record shouldn't be its own ancestor 
+--it is essiential to avoid infinitive loops in application logic 
+CREATE TABLE diet(diet_id SERIAL PRIMARY KEY,
+	name VARCHAR(15) NOT NULL,
+	parent_diet_id INTEGER REFERENCES diet CHECK (NOT (diet_id = ANY (ancestors(parent_diet_id)))));
+
+--the proper implementation of ancestors function
+-- did - diet_id of diet which ancestors we are seeking 
+CREATE OR REPLACE FUNCTION ancestors(did integer) RETURNS integer[] AS $_$
+	DECLARE
+		diet_row diet%ROWTYPE;
+	BEGIN
+		IF did IS NULL THEN
+			RETURN '{}';
+		ELSE
+			SELECT * INTO diet_row FROM diet WHERE diet.diet_id=did;
+			RETURN (SELECT array_append(ancestors(diet_row.parent_diet_id),did));
+		END IF;
+	END;
+$_$ LANGUAGE plpgsql;
+
+CREATE TABLE person(person_id SERIAL PRIMARY KEY,
+	name VARCHAR(15) NOT NULL,
+	surname VARCHAR(30) NOT NULL,
+	password_digested TEXT NOT NULL,
+	email VARCHAR(255) NOT NULL UNIQUE,
+	admin BOOLEAN NOT NULL DEFAULT FALSE);
+
+CREATE TABLE person_diet(person_diet_id SERIAL PRIMARY KEY,
+	diet_id INTEGER REFERENCES diet NOT NULL,
+	person_id INTEGER REFERENCES person NOT NULL);
+
+CREATE TABLE product(product_id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	is_a_meal BOOLEAN DEFAULT false NOT NULL,
+	calories INTEGER NOT NULL,
+	quantity INTEGER NOT NULL,
+	quantity_magnitude VARCHAR(5) DEFAULT 'g' NOT NULL,
+	description TEXT NOT NULL,
+	img_url TEXT DEFAULT '/images/default.png' NOT NULL);
+
+CREATE TABLE restriction(restriction_id SERIAL PRIMARY KEY,
+	diet_id INTEGER REFERENCES diet NOT NULL,
+	product_id INTEGER REFERENCES product NOT NULL,
+	days SMALLINT DEFAULT 127 NOT NULL CHECK (days BETWEEN 1 AND 127));
+
+CREATE TABLE product_recipe(product_recipe_id SERIAL PRIMARY KEY,
+	subject_product_id INTEGER REFERENCES product NOT NULL,
+	ingredient_product_id INTEGER REFERENCES product NOT NULL,
+	quantity INTEGER NOT NULL);
+
+CREATE TABLE person_product(person_product_id SERIAL PRIMARY KEY,
+	product_id INTEGER REFERENCES product NOT NULL,
+	person_id INTEGER REFERENCES person NOT NULL,
+	quantity INTEGER NOT NULL,
+	expiration_date TIMESTAMP DEFAULT now()+interval '100 years' NOT NULL);
+
+CREATE TABLE substance(substance_id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL);
+
+CREATE TABLE substance_occurrence(substance_occurrence_id SERIAL PRIMARY KEY,
+	product_id INTEGER REFERENCES product NOT NULL,
+	substance_id INTEGER REFERENCES substance NOT NULL,
+	quantity INTEGER NOT NULL);
+
+CREATE OR REPLACE FUNCTION restricted_products(did INTEGER) RETURNS SETOF restriction AS $_$
+DECLARE
+	pdid INTEGER; -- parent_diet_id
+BEGIN
+	IF did IS NULL THEN
+		RETURN;
+	ELSE
+		SELECT parent_diet_id INTO pdid FROM diet WHERE diet_id=did;
+	  RETURN QUERY EXECUTE format(
+	  	'(SELECT * FROM restriction WHERE diet_id=%L) UNION (SELECT * FROM restricted_products(%L))',did,pdid);
+	 END IF;
+END;
+$_$ LANGUAGE plpgsql;
