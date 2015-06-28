@@ -31,12 +31,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/signin',function(req,res,next){
-  res.render('signin',{message: req.flash("error")});
+  res.render('signin',{error: req.flash("error")});
 });
 
 app.get('/signup',function(req,res,next){
-  res.render('signup',{message: req.flash('error')});
+  res.render('signup',{error: req.flash('error')});
 });
+app.post('/signup',passport.authenticate('signup',{successRedirect: '/',failureRedirect: '/signup',failureFlash: true,successFlash: true}));
+
 
 app.use('/', routes);
 
