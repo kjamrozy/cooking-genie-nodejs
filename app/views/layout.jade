@@ -1,7 +1,17 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+	head
+		title= title
+	link(rel='stylesheet', href='/stylesheets/style.css')
+	link(rel='stylesheet', href='/stylesheets/jquery-ui.css')
+	link(rel='stylesheet',href="/stylesheets/bootstrap.min.css")
+	link(rel='stylesheet',href="/stylesheets/bootstrap-theme.min.css")
+	body
+		block content
+	script(src="/javascripts/jquery-2.1.4.min.js")
+	script(src="/javascripts/jquery-ui.js")
+	script(src="/javascripts/bootstrap.min.js")
+
+	//-provides support for page specific javascript
+	if javascript
+		script(src="/javascripts/#{javascript}")
