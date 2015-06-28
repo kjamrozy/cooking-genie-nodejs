@@ -34,6 +34,10 @@ app.get('/signin',function(req,res,next){
   res.render('signin',{message: req.flash("error")});
 });
 
+app.get('/signup',function(req,res,next){
+  res.render('signup',{message: req.flash('error')});
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
