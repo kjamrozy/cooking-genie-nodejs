@@ -1,8 +1,41 @@
 var bcrypt = require('bcrypt-node');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
-var pg = require('pg');
-var conString = "postgres://postgres:1234@localhost:5432/cooking-genie";
+var pg = require('./postgres');
+var conString = pg.conString;
+
+/** Used to sign user in. 
+@param {string} email - user's email
+@param {string} password - user's password
+@param done - authentication callback used for returning user's instance
+*/
+var signIn = function(email,password,done){
+  //connect to the postgres database
+  pg.connect(conString,function(err,client,pg_done){
+    //look up for the Person with specified email(username)
+    client.query("SELECT * FROM Person WHERE email=$1",[email],function(err,result){
+      //return the client to the pool
+      pg_done();
+
+      //if query failed fail authorization
+      if(err)
+        return done(null,false,{message: "Internal server error: "+err});
+
+      var user = result.rows[0];
+
+      //if there is no user then email must be invalid
+      if(!user)
+        return done(null,false,{message: "Invalid email"});
+
+      //if password is correct return user
+      if(bcrypt.compareSync(password,user.password_digested))
+        return done(null,user);
+
+      //password is invalid so fail authentication with error info
+      done(null,false,{message: "Invalid password"});
+    });
+  });
+};
 
 /** Used for signes user up
 @param req - HTTP request
@@ -10,6 +43,12 @@ var conString = "postgres://postgres:1234@localhost:5432/cooking-genie";
 @param {string} password - user's password
 */
 var signUpUser = function(req,email,password,done){
+    if(req.body.name=='')
+      return done(null,false,{message: "Name shouldn't be empty"});
+
+    if(req.body.surname=='')
+          return done(null,false,{message: "Surname shouldn't be empty"});
+
     //passwords should match each other
     if(req.body.password!=req.body.password_confirmed)
       return done(null,false,{message: "Password is ambigous"});
@@ -91,6 +130,7 @@ var deserializeUser = function(id,done){
     });
 };
 
+passport.use('signin',new localStrategy(signIn));
 passport.use("signup",new localStrategy({passReqToCallback: true},signUpUser));
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);

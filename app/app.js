@@ -7,8 +7,8 @@ var bodyParser = require('body-parser');
 var passport = require('./routes/authorization');
 var session = require('express-session');
 var flash = require('connect-flash');
-var pg = require('pg');
-var conString = "";
+var pg = require('./routes/postgres');
+var conString = pg.conString;
 
 var routes = require('./routes/index');
 
@@ -38,7 +38,14 @@ app.get('/signup',function(req,res,next){
   res.render('signup',{error: req.flash('error')});
 });
 app.post('/signup',passport.authenticate('signup',{successRedirect: '/',failureRedirect: '/signup',failureFlash: true,successFlash: true}));
+app.post('/signin',passport.authenticate('signin',{successRedirect: '/',failureRedirect: '/signin',failureFlash: true}) );
 
+//ensure that user is logged in begore accessing the page
+app.use(function(req,res,next){
+  if(req.isAuthenticated())
+    return next();
+  res.redirect('/signin');
+});
 
 app.use('/', routes);
 
