@@ -7,7 +7,7 @@ block content
 	.row
 		.col-md-offset-4.col-md-4.well
 			form(action="/signup",method="POST",role="form")
-				if error
+				if error && error!=""
 					.alert.alert-danger
 						p
 							= error
@@ -27,6 +27,6 @@ block content
 					label(for="password_confirmed") Confirm password
 					input(id="password_confirmed",type="password",name="password_confirmed").form-control
 				.form-group
-					input(type="submit",value="Create an account").btn.btn-default
+					input(type="submit",value="Create an account").btn.btn-primary.btn-lg
 				p Already had an account? 
 					a(href="/signin") Sign in!
