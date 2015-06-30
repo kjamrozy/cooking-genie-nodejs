@@ -1,0 +1,9 @@
+.advisor-container{
+	position: fixed !important;
+
+}
+#advisor{
+	min-height: 70vh;
+	max-height: 70vh;
+	overflow: scroll;
+}

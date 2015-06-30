@@ -6,6 +6,8 @@ html
 	link(rel='stylesheet', href='/stylesheets/jquery-ui.css')
 	link(rel='stylesheet',href="/stylesheets/bootstrap.min.css")
 	link(rel='stylesheet',href="/stylesheets/bootstrap-theme.min.css")
+	if stylesheet
+		link(rel='stylesheet',href="/stylesheets/#{stylesheet}")
 	body
 		block content
 	script(src="/javascripts/jquery-2.1.4.min.js")

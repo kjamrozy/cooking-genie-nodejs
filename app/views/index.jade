@@ -1,5 +1,33 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	.container-fluid
+		.row
+			.col-md-7.advisor-container
+				.jumbotron#advisor
+					#advisor-prompt
+						h1 Meal Advisor
+						p You want to eat something and have no idea what to prepare? Good for you we can show you what tasty food you can prepare with your food. Wanna try?
+						button.btn-lg.btn-primary#advisor-button What I can cook?
+			.col-md-5.col-md-offset-7
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Your fridge
+					.panel-body#fridge-panel
+						p Empty
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Add content to the fridge
+					.panel-body
+						form(action="/",method="POST")
+							.form-group
+								label(for="products") Product
+								select(id="products",name="product_id").form-control
+									option(value="none") Not yet implemented
+							.form-group
+								label(for="datepicker") Expiration date
+								input#datepicker(type='text',name="expiration_date").form-control
+							.form-group
+								label(for="quantity") Quantity
+								input#quantity(type="number",name="quantity").form-control
+							button.button.button-md.btn-block Add
