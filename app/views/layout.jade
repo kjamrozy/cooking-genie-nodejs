@@ -1,20 +1,47 @@
-doctype html
-html
-	head
-		title= title
-	link(rel='stylesheet', href='/stylesheets/style.css')
-	link(rel='stylesheet', href='/stylesheets/jquery-ui.css')
-	link(rel='stylesheet',href="/stylesheets/bootstrap.min.css")
-	link(rel='stylesheet',href="/stylesheets/bootstrap-theme.min.css")
-	if stylesheet
-		link(rel='stylesheet',href="/stylesheets/#{stylesheet}")
+extends basic_layout
+
+block extended_layout	
 	body
-		block content
+		if error && error != ""
+			.alert.alert-danger.alert-dissmiss(role='alert')
+				button(type="button",data-dismiss="alert").close x
+				p 
+					= error
+		if success && success != ""
+			.alert.alert-success.alert-dissmiss(role='alert')
+				button(type="button",data-dismiss="alert").close x
+				p 
+					= success
+		nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+			.container
+					.navbar-header
+						a.navbar-brand(href="#") Cooking genie
+					.navbar-collapse.collapse(id="bs-example-navbar-collapse-1")
+						ul.nav.navbar-nav
+							li.active
+								a(href="/") Home
+							li
+								a(href="/products.html") Products
+						form(action="/search",method="POST").navbar-form.navbar-left
+							.form-group
+								input(type="text",placeholder="Search",name="query").form-control
+							button(type="submit").btn.btn-default Submit
+						ul.nav.navbar-nav
+							li
+								a("href"="/manage") Manage
+							li
+								a(href="/about") About
+						ul.nav.navbar-nav.navbar-right
+							li
+								a(href="/account") Account
+						p.navbar-text.navbar-right
+							= user.name + " " + user.surname
+						img(src="http://gravatar.com/avatar/#{md5}?s=35").navbar-right.navbar-brand
+	block content
 	script(src="/javascripts/jquery-2.1.4.min.js")
 	script(src="/javascripts/jquery-ui.js")
 	script(src="/javascripts/bootstrap.min.js")
 	script(src="/javascripts/jquery.nicescroll.min.js")
-
 	//-provides support for page specific javascript
 	if javascript
 		script(src="/javascripts/#{javascript}")

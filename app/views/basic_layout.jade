@@ -1,0 +1,11 @@
+doctype html
+html
+	head
+		title= title
+	link(rel='stylesheet', href='/stylesheets/style.css')
+	link(rel='stylesheet', href='/stylesheets/jquery-ui.css')
+	link(rel='stylesheet',href="/stylesheets/bootstrap.min.css")
+	link(rel='stylesheet',href="/stylesheets/bootstrap-theme.min.css")
+	if stylesheet
+		link(rel='stylesheet',href="/stylesheets/#{stylesheet}")
+	block extended_layout

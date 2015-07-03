@@ -3,7 +3,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Cooking genie - Home' ,stylesheet: "index.css",javascript: "index.js"});
+  res.render('index', { title: 'Cooking genie - Home' ,stylesheet: "index.css",javascript: "index.js",
+  	user: req.user,success: req.flash('success'),error: req.flash('error')});
 });
 
 module.exports = router;

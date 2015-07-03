@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var passport = require('./routes/authorization');
 var session = require('express-session');
 var flash = require('connect-flash');
+var md5 = require('MD5');
 var pg = require('./routes/postgres');
 var conString = pg.conString;
 
@@ -42,8 +43,11 @@ app.post('/signin',passport.authenticate('signin',{successRedirect: '/',failureR
 
 //ensure that user is logged in begore accessing the page
 app.use(function(req,res,next){
-  if(req.isAuthenticated())
+  if(req.isAuthenticated()){ 
+    res.locals = {md5: md5(req.user.email),
+      error: req.flash('error')};
     return next();
+  }
   res.redirect('/signin');
 });
 
