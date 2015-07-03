@@ -118,9 +118,10 @@ var serializeUser = function(user,done){
  */
 var deserializeUser = function(id,done){
   //connect to the database to deserialize the user
-  pg.connect(conString,function(err,client,info){
+  pg.connect(conString,function(err,client,pg_done){
     var query = client.query("SELECT * FROM Person WHERE person_id = $1",
         [id],function(err,result){
+        pg_done();
         //if query failed user authentication failed too
         if(err)
           return done(null,false);
