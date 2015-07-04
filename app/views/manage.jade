@@ -67,7 +67,7 @@ block content
 					.panel-heading
 						h3.panel-title Substance
 					.panel-body
-						form(role="form",action="/substance",method="POST")
+						form(role="form",action="/substances",method="POST")
 							.form-group
 								label(for="substance_name") Name
 								input#substance_name(type="text",name="name").form-control
@@ -77,7 +77,7 @@ block content
 					.panel-heading
 						h3.panel-title Substance occurence
 					.panel-body
-						form(role="form",action="occurence",method="POST")
+						form(role="form",action="/products/substances",method="POST")
 							.form-group
 								label(for="product") Product
 								select#product(type="text",name="product").form-control

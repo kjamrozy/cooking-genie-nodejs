@@ -38,7 +38,7 @@ var manage_get_route = function(req,res,next){
 				    //pass data to the webpage and release postgres client
 			    	pg_done();
 			    	res.render('manage',{title: "Cooking genie - manage",products: products,diets: diets,substances: result.rows,
-			    		user: req.user,message: req.flash('success'),page: "manage",panel_error: req.flash('panel-error'),
+			    		user: req.user,success: req.flash('success'),page: "manage",panel_error: req.flash('panel-error'),
 			    		field: req.flash('error-field'),panel: req.flash('panel')});
 				    });
 			    });
@@ -140,9 +140,36 @@ var products_recipe_route = function(req,res,next){
   });
 };
 
+var substances_post_route = function(req,res,next){
+	//really simple validation
+	if(!req.body.name)
+		return validation_failed(req,res,"substance","name","Name should not be empty");
+	//connect to the database to insert ingredient product
+	pg.connect(conString,function(err,client,pg_done){	
+		//raise internal error if connection failed
+    if(err)
+    	return raiseInternalError(err,client,pg_done,next);
+
+    //insert ingredient product to the database
+    client.query("INSERT INTO Substance (name) VALUES ($1)",
+    	[req.body.name],
+    	function(err,result){
+	    	//raise internal error if insertion failed
+		    if(err)
+		    	return raiseInternalError(err,client,pg_done,next);
+
+		    //release client and render webpage
+	    	pg_done();
+	    	req.flash('success','Succesfully created new substance!');
+	    	res.redirect('/manage');
+    });
+  });
+};
+
 router.get('/manage',manage_get_route);
 router.post('/products',products_post_route);
 router.post('/products/recipe',products_recipe_route);
+router.post('/substances',substances_post_route);
 router.get('/products/:id',function(req,res,next){
 	res.send("Not yet implemented!");
 });
