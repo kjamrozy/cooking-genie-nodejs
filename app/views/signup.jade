@@ -1,32 +1,33 @@
 extends layout
 
-block content
-	.row
-		.col-md-12.jumbotron.text-center
-			h1 Fill in your personal data
-	.row
-		.col-md-offset-4.col-md-4.well
-			form(action="/signup",method="POST",role="form")
-				if error && error!=""
-					.alert.alert-danger
-						p
-							= error
-				.form-group
-					label(for="name") Name
-					input(id="name",type="text",placeholder="Name",name="name").form-control
-				.form-group
-					label(for="surname") Surname
-					input(id="surname",type="text",placeholder="Surname",name="surname").form-control
-				.form-group
-					label(for="email") Email
-					input(id="email",type="text",placeholer="Please write down your email",name="username").form-control
-				.form-group
-					label(for="password") Password
-					input(id="password",type="password",name="password").form-control
-				.form-group
-					label(for="password_confirmed") Confirm password
-					input(id="password_confirmed",type="password",name="password_confirmed").form-control
-				.form-group
-					input(type="submit",value="Create an account").btn.btn-primary.btn-lg
-				p Already had an account? 
-					a(href="/signin") Sign in!
+block extended_layout
+	body
+		.row
+			.col-md-12.jumbotron.text-center
+				h1 Fill in your personal data
+		.row
+			.col-md-offset-4.col-md-4.well
+				form(action="/signup",method="POST",role="form")
+					if error && error!=""
+						.alert.alert-danger
+							p
+								= error
+					.form-group
+						label(for="name") Name
+						input(id="name",type="text",placeholder="Name",name="name").form-control
+					.form-group
+						label(for="surname") Surname
+						input(id="surname",type="text",placeholder="Surname",name="surname").form-control
+					.form-group
+						label(for="email") Email
+						input(id="email",type="text",placeholer="Please write down your email",name="username").form-control
+					.form-group
+						label(for="password") Password
+						input(id="password",type="password",name="password").form-control
+					.form-group
+						label(for="password_confirmed") Confirm password
+						input(id="password_confirmed",type="password",name="password_confirmed").form-control
+					.form-group
+						input(type="submit",value="Create an account").btn.btn-primary.btn-lg
+					p Already had an account? 
+						a(href="/signin") Sign in!

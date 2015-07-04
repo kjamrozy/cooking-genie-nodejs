@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "MD5": "^1.2.2",
     "bcrypt-node": "^0.1.0",
     "body-parser": "~1.12.4",
     "connect-flash": "^0.1.1",
