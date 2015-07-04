@@ -18,22 +18,24 @@ block extended_layout
 						a.navbar-brand(href="#") Cooking genie
 					.navbar-collapse.collapse(id="bs-example-navbar-collapse-1")
 						ul.nav.navbar-nav
-							li.active
+							li(class= page == "index" ? "active" : undefined)
 								a(href="/") Home
-							li
+							li(class= page == "products" ? "active" : undefined)
 								a(href="/products.html") Products
 						form(action="/search",method="POST").navbar-form.navbar-left
 							.form-group
 								input(type="text",placeholder="Search",name="query").form-control
 							button(type="submit").btn.btn-default Submit
 						ul.nav.navbar-nav
-							li
+							li(class= page == "manage" ? "active" : undefined)
 								a("href"="/manage") Manage
-							li
+							li(class= page == "about" ? "active" : undefined)
 								a(href="/about") About
 						ul.nav.navbar-nav.navbar-right
-							li
+							li(class= page == "account" ? "active" : undefined)
 								a(href="/account") Account
+							li
+								a(href="/signout").glyphicon.glyphicon-log-out
 						p.navbar-text.navbar-right
 							= user.name + " " + user.surname
 						img(src="http://gravatar.com/avatar/#{md5}?s=35").navbar-right.navbar-brand
