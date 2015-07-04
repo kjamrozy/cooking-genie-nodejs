@@ -43,6 +43,11 @@ block content
 						h3.panel-title Recipe
 					.panel-body
 						form(role="form",action="/products/recipe",method="POST")
+							if panel == "recipe"
+								.alert.alert-danger.alert-dissmiss(role='alert')
+									button(type="button",data-dismiss="alert").close x
+									p 
+										= panel_error
 							.form-group
 								label(for="product_name") Product
 								select#product_id(type="text",name="product_id").form-control
@@ -53,7 +58,7 @@ block content
 								select#ingredient_id(type="text",name="ingredient_id").form-control
 									for product in products
 										option(value="#{product.product_id}")= product.name
-							.form-group
+							.form-group(class= panel[0]=='recipe' && field[0] == 'quantity' ? 'has-error' : undefined)
 								label(for="ingredient_quantity") Quantity
 								input#ingredient_quantity(type="number",name="quantity").form-control
 							.form-group

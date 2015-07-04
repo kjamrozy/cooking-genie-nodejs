@@ -68,6 +68,7 @@ var validation_failed = function(req,res,panel,field,msg){
 @param next - callback for passing request to the next function
 */
 var products_post_route = function(req,res,next){
+	//really simple validation
 	if(!req.body.name)
 		return validation_failed(req,res,"product","name","Name should not be empty");
 	if(!req.body.calories)
@@ -106,8 +107,42 @@ var products_post_route = function(req,res,next){
   });
 };
 
+/** Route for inserting products(one per visiting link) to the specific recipe
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+*/
+var products_recipe_route = function(req,res,next){
+	if(!req.body.product_id || !req.body.ingredient_id)
+		return res.redirect('/manage');
+	//really simple validation
+	if(!req.body.quantity)
+		return validation_failed(req,res,"recipe","quantity","Quantity should not be empty");
+	//connect to the database to insert ingredient product
+	pg.connect(conString,function(err,client,pg_done){	
+		//raise internal error if connection failed
+    if(err)
+    	return raiseInternalError(err,client,pg_done,next);
+
+    //insert ingredient product to the database
+    client.query("INSERT INTO Product_recipe (subject_product_id,ingredient_product_id,quantity) VALUES ($1,$2,$3)",
+    	[req.body.product_id,req.body.ingredient_id,req.body.quantity],
+    	function(err,result){
+	    	//raise internal error if insertion failed
+		    if(err)
+		    	return raiseInternalError(err,client,pg_done,next);
+
+		    //release client and render webpage
+	    	pg_done();
+	    	req.flash('success','Succesfully created new recipe!');
+	    	res.redirect('/products/'+req.body.product_id);
+    });
+  });
+};
+
 router.get('/manage',manage_get_route);
 router.post('/products',products_post_route);
+router.post('/products/recipe',products_recipe_route);
 router.get('/products/:id',function(req,res,next){
 	res.send("Not yet implemented!");
 });
