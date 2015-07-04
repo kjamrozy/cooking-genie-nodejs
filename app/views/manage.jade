@@ -41,11 +41,13 @@ block content
 							.form-group
 								label(for="product_name") Product
 								select#product_id(type="text",name="product_id").form-control
-									option(value="None") Not yet implemented
+									for product in products
+										option(value="#{product.product_id}")= product.name
 							.form-group
 								label(for="ingredient_id") Ingredient
 								select#ingredient_id(type="text",name="ingredient_id").form-control
-									option(value="None") Not yet implemented
+									for product in products
+										option(value="#{product.product_id}")= product.name
 							.form-group
 								label(for="ingredient_quantity") Quantity
 								input#ingredient_quantity(type="number",name="quantity").form-control
@@ -67,12 +69,15 @@ block content
 					.panel-body
 						form(role="form",action="occurence",method="POST")
 							.form-group
-								label(for="substance") Substance
-								input(type="text",name="substance").form-control
+								label(for="product") Product
+								select#product(type="text",name="product").form-control
+									for product in products
+										option(value="#{product.product_id}")= product.name
 							.form-group
 								label(for="occuring_substance") Has
 								select#occuring_substance(type="text",name="occur_sub").form-control
-									option(value="None") Not yet implemented
+									for substance in substances
+										option(value="#substance.substance_id")= substance.name
 							.form-group
 								label(for="quantity_quantity") Quantity per 100g
 								input(type="number",name="quantity").form-control
@@ -90,7 +95,9 @@ block content
 							.form-group
 								label(for="parent_diet") Parent diet
 								select#parent_diet(name="parent_diet_id").form-control
-									option(value="None") Not yet implemented
+									option None
+									for diet in diets
+										option(value="#{diet.diet_id}")= diet.name
 							.form-group
 								input(type="submit",value="Add").btn.btn-default.form-control
 				.panel.panel-default
@@ -101,11 +108,13 @@ block content
 							.form-group
 								label(for="diet_id") Diet								
 								select#diet_id(name="diet_id").form-control
-									option(value="None") Not yet implemented
+									for diet in diets
+										option(value="#{diet.diet_id}")= diet.name
 							.form-group
 								label(for="restricted_product") Restricted product
 								select#restricted_product(name="product_id").form-control
-									option(value="None") Not yet implemented
+									for product in products
+										option(value="#{product.product_id}")= product.name
 							fieldset
 								legend Days
 								.row.form-group
