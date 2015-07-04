@@ -1,0 +1,137 @@
+extends layout
+
+block content
+	.container
+		.row
+			.col-md-4
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Product
+					.panel-body
+						form(role="form",action="/products",method="POST")
+							.form-group
+								label(for="product_name") Name
+								input#product_name(type="text",name="name").form-control
+							.form-group
+								label(for="product_calories") Calories(whole product)
+								input#product_calories(type="number",name="calories").form-control
+							.form-group
+								label(for="product_quantity") Quantity
+								input#product_quantity(type="number",name="quantity").form-control
+							.form-group
+								label(for="product_magnitude") Quantity magnitude
+								input#product_magnitude(type="text",value="g",name="quantity_magnitude").form-control
+							.form-group
+								label(for="product_img") Image url
+								input#product_img(type="text",value="/images/default.png",name="img_url").form-control
+							.form-group
+								label(for="is_a_meal").form-inline.block-inline Meal
+								input#is_a_meal(type="checkbox",name="is_a_meal")
+							.form-group
+								label(for="product_description") Description
+								textarea#product_description(name="description").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+			.col-md-4
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Recipe
+					.panel-body
+						form(role="form",action="/products/recipe",method="POST")
+							.form-group
+								label(for="product_name") Product
+								select#product_id(type="text",name="product_id").form-control
+									option(value="None") Not yet implemented
+							.form-group
+								label(for="ingredient_id") Ingredient
+								select#ingredient_id(type="text",name="ingredient_id").form-control
+									option(value="None") Not yet implemented
+							.form-group
+								label(for="ingredient_quantity") Quantity
+								input#ingredient_quantity(type="number",name="quantity").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Substance
+					.panel-body
+						form(role="form",action="/substance",method="POST")
+							.form-group
+								label(for="substance_name") Name
+								input#substance_name(type="text",name="name").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Substance occurence
+					.panel-body
+						form(role="form",action="occurence",method="POST")
+							.form-group
+								label(for="substance") Substance
+								input(type="text",name="substance").form-control
+							.form-group
+								label(for="occuring_substance") Has
+								select#occuring_substance(type="text",name="occur_sub").form-control
+									option(value="None") Not yet implemented
+							.form-group
+								label(for="quantity_quantity") Quantity per 100g
+								input(type="number",name="quantity").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+			.col-md-4
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Diet
+					.panel-body
+						form(role="form",action="/diet",method="POST")
+							.form-group
+								label(for="diet_name") Name
+								input#diet_name(type="text",name="name").form-control
+							.form-group
+								label(for="parent_diet") Parent diet
+								select#parent_diet(name="parent_diet_id").form-control
+									option(value="None") Not yet implemented
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Diet restriction
+					.panel-body
+						form(role="form",action="/diet/restriction",method="POST")
+							.form-group
+								label(for="diet_id") Diet								
+								select#diet_id(name="diet_id").form-control
+									option(value="None") Not yet implemented
+							.form-group
+								label(for="restricted_product") Restricted product
+								select#restricted_product(name="product_id").form-control
+									option(value="None") Not yet implemented
+							fieldset
+								legend Days
+								.row.form-group
+									.col-md-6
+										.form-group
+											label(for="monday") Monday
+											input#monday(type="checkbox",name="monday")
+										.form-group
+											label(for="wednesday") Wednesday
+											input#wednesday(type="checkbox",name="wednesday")
+										.form-group
+											label(for="friday") Friday
+											input#friday(type="checkbox",name="friday")
+										.form-group
+											label(for="sunday") Sunday
+											input#sunday(type="checkbox",name="sunday")
+									.col-md-6
+										.form-group
+											label(for="tuesday") Tuesday
+											input#tuesday(type="checkbox",name="tuesday")
+										.form-group
+											label(for="thursday") Thursday
+											input#thursday(type="checkbox",name="thursday")
+										.form-group
+											label(for="saturday") Saturday
+											input#saturday(type="checkbox",name="saturday")
+								.form-group
+									input(type="submit",value="Add").btn.btn-default.form-control
+		.row
