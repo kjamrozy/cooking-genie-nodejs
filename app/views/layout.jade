@@ -36,8 +36,7 @@ block extended_layout
 								a(href="/account") Account
 							li
 								a(href="/signout").glyphicon.glyphicon-log-out
-						p.navbar-text.navbar-right
-							= user.name + " " + user.surname
+						p.navbar-text.navbar-right= user.name + " "+user.surname
 						img(src="http://gravatar.com/avatar/#{md5}?s=35").navbar-right.navbar-brand
 	block content
 	script(src="/javascripts/jquery-2.1.4.min.js")

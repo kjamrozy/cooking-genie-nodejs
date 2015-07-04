@@ -9,19 +9,24 @@ block content
 						h3.panel-title Product
 					.panel-body
 						form(role="form",action="/products",method="POST")
-							.form-group
+							if panel == "product"
+								.alert.alert-danger.alert-dissmiss(role='alert')
+									button(type="button",data-dismiss="alert").close x
+									p 
+										= panel_error
+							.form-group(class= panel[0]=='product' && field[0] == 'name' ? 'has-error' : undefined)
 								label(for="product_name") Name
 								input#product_name(type="text",name="name").form-control
-							.form-group
+							.form-group(class= panel[0]=='product' && field[0] == 'calories' ? 'has-error' : undefined)
 								label(for="product_calories") Calories(whole product)
 								input#product_calories(type="number",name="calories").form-control
-							.form-group
+							.form-group(class= panel[0]=='product' && field[0] == 'quantity' ? 'has-error' : undefined)
 								label(for="product_quantity") Quantity
 								input#product_quantity(type="number",name="quantity").form-control
-							.form-group
+							.form-group(class= panel[0]=='product' && field[0] == 'quantity_magnitude' ? 'has-error' : undefined)
 								label(for="product_magnitude") Quantity magnitude
 								input#product_magnitude(type="text",value="g",name="quantity_magnitude").form-control
-							.form-group
+							.form-group(class= panel[0]=='product' && field[0] == 'img_url' ? 'has-error' : undefined)
 								label(for="product_img") Image url
 								input#product_img(type="text",value="/images/default.png",name="img_url").form-control
 							.form-group
