@@ -75,19 +75,19 @@ block content
 								input(type="submit",value="Add").btn.btn-default.form-control
 				.panel.panel-default
 					.panel-heading
-						h3.panel-title Substance occurence
+						h3.panel-title Substance occurrence
 					.panel-body
 						form(role="form",action="/products/substances",method="POST")
 							.form-group
 								label(for="product") Product
-								select#product(type="text",name="product").form-control
+								select#product(type="text",name="product_id").form-control
 									for product in products
 										option(value="#{product.product_id}")= product.name
 							.form-group
 								label(for="occuring_substance") Has
-								select#occuring_substance(type="text",name="occur_sub").form-control
+								select#occuring_substance(type="text",name="substance_id").form-control
 									for substance in substances
-										option(value="#substance.substance_id")= substance.name
+										option(value="#{substance.substance_id}")= substance.name
 							.form-group
 								label(for="quantity_quantity") Quantity per 100g
 								input(type="number",name="quantity").form-control

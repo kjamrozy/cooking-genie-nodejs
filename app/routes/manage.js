@@ -140,7 +140,12 @@ var products_recipe_route = function(req,res,next){
   });
 };
 
-var substances_post_route = function(req,res,next){
+/** Route for creating substances
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+*/
+var substances_route = function(req,res,next){
 	//really simple validation
 	if(!req.body.name)
 		return validation_failed(req,res,"substance","name","Name should not be empty");
@@ -166,10 +171,47 @@ var substances_post_route = function(req,res,next){
   });
 };
 
+/** Route for adding substance to the product
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+*/
+var productes_substances_route = function(req,res,next){
+	//if there is no product_id or substance_id then it's not the call from /manage, so redirect to the /manage
+	if(!req.body.product_id || !req.body.substance_id)
+		return res.redirect('/manage');
+	console.log("haha");
+	//really simple validation
+	if(!req.body.quantity)
+		return validation_failed(req,res,"occurence","quantity","Quantity should not be empty");
+
+	//connect to the database to insert ingredient product
+	pg.connect(conString,function(err,client,pg_done){	
+		//raise internal error if connection failed
+    if(err)
+    	return raiseInternalError(err,client,pg_done,next);
+
+    //insert ingredient product to the database
+    client.query("INSERT INTO Substance_occurrence (product_id,substance_id,quantity) VALUES ($1,$2,$3)",
+    	[req.body.product_id,req.body.substance_id,req.body.quantity],
+    	function(err,result){
+	    	//raise internal error if insertion failed
+		    if(err)
+		    	return raiseInternalError(err,client,pg_done,next);
+
+		    //release client and render webpage
+	    	pg_done();
+	    	req.flash('success','Succesfully added substance to the product!');
+	    	res.redirect('/products/'+req.body.product_id);
+    });
+  });
+};
+
 router.get('/manage',manage_get_route);
 router.post('/products',products_post_route);
 router.post('/products/recipe',products_recipe_route);
-router.post('/substances',substances_post_route);
+router.post('/substances',substances_route);
+router.post('/products/substances',productes_substances_route);
 router.get('/products/:id',function(req,res,next){
 	res.send("Not yet implemented!");
 });
