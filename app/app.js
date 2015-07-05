@@ -55,6 +55,11 @@ app.use(function(req,res,next){
 app.use('/', routes);
 app.use(manage);
 
+//route for accessing the about webpage
+app.get('/about',function(req,res,next){
+  res.render('about',{title: "Cooking genie - About",user: req.user,message: req.flash('success')});
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
