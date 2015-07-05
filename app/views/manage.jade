@@ -1,0 +1,156 @@
+extends layout
+
+block content
+	.container
+		.row
+			.col-md-4
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Product
+					.panel-body
+						form(role="form",action="/products",method="POST")
+							if panel == "product"
+								.alert.alert-danger.alert-dissmiss(role='alert')
+									button(type="button",data-dismiss="alert").close x
+									p 
+										= panel_error
+							.form-group(class= panel[0]=='product' && field[0] == 'name' ? 'has-error' : undefined)
+								label(for="product_name") Name
+								input#product_name(type="text",name="name").form-control
+							.form-group(class= panel[0]=='product' && field[0] == 'calories' ? 'has-error' : undefined)
+								label(for="product_calories") Calories(whole product)
+								input#product_calories(type="number",name="calories").form-control
+							.form-group(class= panel[0]=='product' && field[0] == 'quantity' ? 'has-error' : undefined)
+								label(for="product_quantity") Quantity
+								input#product_quantity(type="number",name="quantity").form-control
+							.form-group(class= panel[0]=='product' && field[0] == 'quantity_magnitude' ? 'has-error' : undefined)
+								label(for="product_magnitude") Quantity magnitude
+								input#product_magnitude(type="text",value="g",name="quantity_magnitude").form-control
+							.form-group(class= panel[0]=='product' && field[0] == 'img_url' ? 'has-error' : undefined)
+								label(for="product_img") Image url
+								input#product_img(type="text",value="/images/default.png",name="img_url").form-control
+							.form-group
+								label(for="is_a_meal").form-inline.block-inline Meal
+								input#is_a_meal(type="checkbox",name="is_a_meal")
+							.form-group
+								label(for="product_description") Description
+								textarea#product_description(name="description").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+			.col-md-4
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Recipe
+					.panel-body
+						form(role="form",action="/products/recipe",method="POST")
+							if panel == "recipe"
+								.alert.alert-danger.alert-dissmiss(role='alert')
+									button(type="button",data-dismiss="alert").close x
+									p 
+										= panel_error
+							.form-group
+								label(for="product_name") Product
+								select#product_id(type="text",name="product_id").form-control
+									for product in products
+										option(value="#{product.product_id}")= product.name
+							.form-group
+								label(for="ingredient_id") Ingredient
+								select#ingredient_id(type="text",name="ingredient_id").form-control
+									for product in products
+										option(value="#{product.product_id}")= product.name
+							.form-group(class= panel[0]=='recipe' && field[0] == 'quantity' ? 'has-error' : undefined)
+								label(for="ingredient_quantity") Quantity
+								input#ingredient_quantity(type="number",name="quantity").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Substance
+					.panel-body
+						form(role="form",action="/substances",method="POST")
+							.form-group
+								label(for="substance_name") Name
+								input#substance_name(type="text",name="name").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Substance occurrence
+					.panel-body
+						form(role="form",action="/products/substances",method="POST")
+							.form-group
+								label(for="product") Product
+								select#product(type="text",name="product_id").form-control
+									for product in products
+										option(value="#{product.product_id}")= product.name
+							.form-group
+								label(for="occuring_substance") Has
+								select#occuring_substance(type="text",name="substance_id").form-control
+									for substance in substances
+										option(value="#{substance.substance_id}")= substance.name
+							.form-group
+								label(for="quantity_quantity") Quantity per 100g
+								input(type="number",name="quantity").form-control
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+			.col-md-4
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Diet
+					.panel-body
+						form(role="form",action="/diet",method="POST")
+							.form-group
+								label(for="diet_name") Name
+								input#diet_name(type="text",name="name").form-control
+							.form-group
+								label(for="parent_diet") Parent diet
+								select#parent_diet(name="parent_diet_id").form-control
+									option None
+									for diet in diets
+										option(value="#{diet.diet_id}")= diet.name
+							.form-group
+								input(type="submit",value="Add").btn.btn-default.form-control
+				.panel.panel-default
+					.panel-heading
+						h3.panel-title Diet restriction
+					.panel-body
+						form(role="form",action="/diet/restriction",method="POST")
+							.form-group
+								label(for="diet_id") Diet								
+								select#diet_id(name="diet_id").form-control
+									for diet in diets
+										option(value="#{diet.diet_id}")= diet.name
+							.form-group
+								label(for="restricted_product") Restricted product
+								select#restricted_product(name="product_id").form-control
+									for product in products
+										option(value="#{product.product_id}")= product.name
+							fieldset
+								legend Days
+								.row.form-group
+									.col-md-6
+										.form-group
+											label(for="monday") Monday
+											input#monday(type="checkbox",name="monday")
+										.form-group
+											label(for="wednesday") Wednesday
+											input#wednesday(type="checkbox",name="wednesday")
+										.form-group
+											label(for="friday") Friday
+											input#friday(type="checkbox",name="friday")
+										.form-group
+											label(for="sunday") Sunday
+											input#sunday(type="checkbox",name="sunday")
+									.col-md-6
+										.form-group
+											label(for="tuesday") Tuesday
+											input#tuesday(type="checkbox",name="tuesday")
+										.form-group
+											label(for="thursday") Thursday
+											input#thursday(type="checkbox",name="thursday")
+										.form-group
+											label(for="saturday") Saturday
+											input#saturday(type="checkbox",name="saturday")
+								.form-group
+									input(type="submit",value="Add").btn.btn-default.form-control
+		.row
