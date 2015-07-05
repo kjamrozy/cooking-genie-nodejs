@@ -180,7 +180,6 @@ var productes_substances_route = function(req,res,next){
 	//if there is no product_id or substance_id then it's not the call from /manage, so redirect to the /manage
 	if(!req.body.product_id || !req.body.substance_id)
 		return res.redirect('/manage');
-	console.log("haha");
 	//really simple validation
 	if(!req.body.quantity)
 		return validation_failed(req,res,"occurence","quantity","Quantity should not be empty");
@@ -207,6 +206,45 @@ var productes_substances_route = function(req,res,next){
   });
 };
 
+/** Route used for adding new diets by using ajax requests.
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+ */
+var diet_post_route = function(req,res,next){
+	//if there is no parent_diet_id then it's not the call from /manage, so redirect to the /manage
+	if(!req.body.parent_diet_id)
+		return res.redirect('/manage');
+	//really simple validation
+	if(!req.body.name)
+		return validation_failed(req,res,"diet","name","Name should not be empty");
+	/*set parent_diet_id to undefined if it is set to None
+	( because nodejs module which connects to the pg maps undefined to NULL)*/
+	if(req.body.parent_diet_id=="None")
+		req.body.parent_diet_id=undefined;
+
+	//connect to the database to insert new diet
+	pg.connect(conString,function(err,client,pg_done){
+		//raise internal error if connection failed
+	    if(err)
+	    	return raiseInternalError(err,client,pg_done,next);
+
+	    //insert new diet to the database
+	    client.query("INSERT INTO Diet (name,parent_diet_id) VALUES ($1,$2)",
+	    	[req.body.name,req.body.parent_diet_id],
+	    	function(err,result){
+		    	//raise internal error if query failed
+			    if(err)
+			    	return raiseInternalError(err,client,pg_done,next);
+
+				//release postgres client and redirect to the /manage page
+		    	pg_done();
+		    	req.flash('success','Succesfully created new diet!');
+		    	res.redirect('/manage');
+	    });
+	});
+};
+
 router.get('/manage',manage_get_route);
 router.post('/products',products_post_route);
 router.post('/products/recipe',products_recipe_route);
@@ -215,5 +253,6 @@ router.post('/products/substances',productes_substances_route);
 router.get('/products/:id',function(req,res,next){
 	res.send("Not yet implemented!");
 });
+router.post('/diet',diet_post_route);
 
 module.exports = router;
