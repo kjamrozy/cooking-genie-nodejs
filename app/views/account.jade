@@ -1,0 +1,50 @@
+extends layout
+
+block content
+	.container
+		.col-md-7
+			.panel-default.panel
+				.panel-heading
+					h3.panel-title Account
+				.panel-body
+					.col-md-4
+						img(src="http://gravatar.com/avatar/#{md5}?s=500").img-responsive
+						center
+							h1.lead= user.name+" "+user.surname
+							hr
+					.col-md-8
+						if error != ""
+							.alert.alert-danger.alert-dissmiss(role='alert')
+								button(type="button",data-dismiss="alert").close x
+								p 
+									= error
+						form(role="form",method="POST",action="/account")
+							.form-group
+								label(for="email") Email
+								input#email(type="email",name="email",placeholder="Email",value="#{user.email}").form-control
+							.form-group
+								label(for="actual_password") Actual password
+								input#actual_password(type="password",name="password").form-control
+							.form-group
+								label(for="new_password") New password
+								input#new_password(type="password",name="new_password").form-control
+							.form-group
+								label(for="confirm_password") Confirm new password
+								input#password_confirmed(type="password",name="password_confirmed").form-control
+							.form-group
+								input(type="submit",value="Save changes").btn.btn-primary.form-control
+		.col-md-5
+			.panel-default.panel
+				.panel-heading
+					h3.panel-title My diets
+				.panel-body
+					p I'm a/an:
+					ul
+						li Not implemented yet
+					form(role="form",method="POST",action="/account/diet")
+						.form-group
+							label(for="diet") I'm also a/an
+							select#diet(name="diet_id").form-control
+								option(value="none") Not implemented yet
+						.form-group
+							input(type="submit",value="Submit").form-control

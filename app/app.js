@@ -11,6 +11,7 @@ var md5 = require('MD5');
 var pg = require('./routes/postgres');
 var conString = pg.conString;
 
+var account = require('./routes/account');
 var routes = require('./routes/index');
 var manage = require('./routes/manage');
 
@@ -54,6 +55,7 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 app.use(manage);
+app.use(account);
 
 //route for accessing the about webpage
 app.get('/about',function(req,res,next){
