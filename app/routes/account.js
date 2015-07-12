@@ -17,7 +17,8 @@ var account_get_route = function(req,res,next){
         return raiseInternalError(err,client,pg_done,next);
 
       //query for all products in database
-      client.query("SELECT * FROM Diet ORDER BY name ASC",function(err,result){
+      client.query("SELECT * FROM Diet AS dt WHERE NOT EXISTS (SELECT * FROM Person_diet JOIN Diet ON(person_diet.diet_id=diet.diet_id) WHERE person_id=$1 AND diet.diet_id=dt.diet_id) ORDER BY name ASC",
+        [req.user.person_id],function(err,result){
         //raise internal error if query failed
         if(err)
           return raiseInternalError(err,client,pg_done,next);
