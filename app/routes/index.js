@@ -42,6 +42,31 @@ var index_route = function(req, res, next) {
   });
 };
 
+/** Route which is in charge of adding new content to the user's fridge 
+@param req - HTTP request
+@param res - server response
+@param req - callback for passing request to the next function
+*/
+var content_post_route = function(req,res,next){
+	//connect to the database to add food
+  pg.connect(conString,function(err,client,pg_done){
+  	//if connection failed raise internal error
+    if(err)
+      return raiseInternalError(err,client,pg_done,next);
+    //insert food to the database
+    client.query("INSERT INTO Person_product(product_id,person_id,expiration_date,quantity) VALUES ($1,$2,$3,$4)",
+      [req.body.product_id,req.user.person_id,String(req.body.expiration_date),req.body.quantity],function(err,result){
+      	//if query failed raise internal error
+        if(err)
+          return raiseInternalError(err,client,pg_done,next);
+        //release client and redirect to the main page
+        pg_done();
+        res.redirect('/');
+      });
+  });
+};
+
 router.get('/', index_route);
+router.post('/',content_post_route);
 
 module.exports = router;
