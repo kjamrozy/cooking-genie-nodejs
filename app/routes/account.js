@@ -93,7 +93,33 @@ var account_post_route = function(req,res,next){
   });
 };
 
+/** Renders /account/diets POST rout used for adding personal diets
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+*/
+var account_diets_route = function(req,res,next){
+  pg.connect(conString,function(err,client,pg_done){
+      //raise internal error if connection failed
+      if(err)
+        return raiseInternalError(err,client,pg_done,next);
+      //insert diet to the database
+      client.query("INSERT INTO Person_diet (person_id,diet_id) VALUES($1,$2)",
+        [req.user.person_id,req.body.diet_id],function(err,result){
+            //raise internal error if insertion failed
+            if(err)
+              return raiseInternalError(err,client,pg_done,next);
+
+            //release postgres client and redirect back to /account
+            pg_done();
+            req.flash('success',"New diet succesfully assigned!");
+            res.redirect('/account');
+        });
+  });
+};
+
 router.get('/account',account_get_route);
 router.post('/account',account_post_route);
+router.post('/account/diets',account_diets_route);
 
 module.exports = router;

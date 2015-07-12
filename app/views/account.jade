@@ -37,7 +37,7 @@ block content
 					ul
 						for diet in person_diets
 							li= diet.name
-					form(role="form",method="POST",action="/account/diet")
+					form(role="form",method="POST",action="/account/diets")
 						.form-group
 							label(for="diet") I'm also a/an
 							select#diet(name="diet_id").form-control
