@@ -31,7 +31,7 @@ var account_get_route = function(req,res,next){
                 return raiseInternalError(err,client,pg_done,next);
 
               pg_done();
-              res.render('account',{title: "Cooking genie - Account",user: req.user,
+              res.render('account',{title: "Cooking genie - Account",page: "account",user: req.user,
                 person_diets: result.rows,diets: diets,message: req.flash('success')});
           })
       });

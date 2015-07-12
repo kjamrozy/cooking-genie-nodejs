@@ -60,7 +60,7 @@ app.use(account);
 
 //route for accessing the about webpage
 app.get('/about',function(req,res,next){
-  res.render('about',{title: "Cooking genie - About",user: req.user,message: req.flash('success')});
+  res.render('about',{page: "about",title: "Cooking genie - About",user: req.user,message: req.flash('success')});
 });
 
 // catch 404 and forward to error handler
