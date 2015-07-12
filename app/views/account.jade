@@ -13,11 +13,16 @@ block content
 							h1.lead= user.name+" "+user.surname
 							hr
 					.col-md-8
-						if error != ""
+						if error && error != "" 
 							.alert.alert-danger.alert-dissmiss(role='alert')
 								button(type="button",data-dismiss="alert").close x
 								p 
 									= error
+						if success && success != ""
+							.alert.alert-success.alert-dissmiss(role='alert')
+								button(type="button",data-dismiss="alert").close x
+								p 
+									= success
 						form(role="form",method="POST",action="/account")
 							.form-group
 								label(for="email") Email
@@ -40,11 +45,13 @@ block content
 				.panel-body
 					p I'm a/an:
 					ul
-						li Not implemented yet
+						for diet in person_diets
+							li= diet.name
 					form(role="form",method="POST",action="/account/diet")
 						.form-group
 							label(for="diet") I'm also a/an
 							select#diet(name="diet_id").form-control
-								option(value="none") Not implemented yet
+								for diet in diets
+									option(value="#{diet.diet_id}")= diet.name
 						.form-group
 							input(type="submit",value="Submit").form-control

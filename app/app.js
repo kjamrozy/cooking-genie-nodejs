@@ -47,7 +47,8 @@ app.post('/signin',passport.authenticate('signin',{successRedirect: '/',failureR
 app.use(function(req,res,next){
   if(req.isAuthenticated()){ 
     res.locals = {md5: md5(req.user.email),
-      error: req.flash('error')};
+      error: req.flash('error'),success: req.flash('success')};
+    console.log((req.flash('error')!=[]));
     return next();
   }
   res.redirect('/signin');
