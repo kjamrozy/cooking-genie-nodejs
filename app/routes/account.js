@@ -2,6 +2,7 @@ var router = require('express').Router();
 var pg = require('./postgres');
 var conString = pg.conString;
 var raiseInternalError = require('./auxiliary');
+var bcrypt = require('bcrypt-node');
 
 /** Renders /account GET route 
 @param req - HTTP request
@@ -36,6 +37,63 @@ var account_get_route = function(req,res,next){
   })
 };
 
+/** Renders /account POST route used for changing personal data
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+*/
+var account_post_route = function(req,res,next){
+  //check if passwords typed match each other
+  if(req.body.new_password!=req.body.password_confirmed){
+    req.flash('error',"New password is ambigous!");
+    return res.redirect('/account');
+  }
+	if(req.body.new_password.length<8){
+		req.flash("error","New password should be at least 8 characters long");
+	  return res.redirect('/account');
+	}
+  //hash new password
+  var hash = bcrypt.hashSync(req.body.new_password);
+  //check if old password is valid
+  if(!bcrypt.compareSync(req.body.password,req.user.password_digested)){
+    req.flash('error',"Actual password is invalid!");
+    return res.redirect('/account');
+  }
+  //connect to the database to change data
+  pg.connect(conString,function(err,client,pg_done){
+    //raise internal error if connection failed  
+    if(err)
+      return raiseInternalError(err,client,pg_done,next);
+
+    /*since email should be unique if we try to update person's email to the same one
+     our query will fail because of unique constraint*/
+    var query,params;
+    //if email stays the same
+    if(req.body.email==req.user.email){
+      query = "UPDATE Person SET password_digested = $1 WHERE person_id=$2";
+      params=[hash,req.user.person_id];
+    }else{//otherwise
+      query = "UPDATE Person SET email = $1, password_digested = $2 WHERE person_id=$3";
+      params = [req.body.email,hash,req.user.person_id];
+    }
+    //update data
+    client.query(query,
+      params,
+      function(err,result){
+        //raise internal error if update failed  
+        if(err)
+          return raiseInternalError(err,client,pg_done,next);
+
+        //release postgres client and redirect back to the /account
+        pg_done();
+        req.user.password_digested=hash;
+        req.flash('success','Succesfully changed your your personal data!');
+        res.redirect('/account');
+      });
+  });
+};
+
 router.get('/account',account_get_route);
+router.post('/account',account_post_route);
 
 module.exports = router;
