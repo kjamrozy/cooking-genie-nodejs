@@ -58,6 +58,11 @@ app.use('/', routes);
 app.use(manage);
 app.use(account);
 
+app.get('/signout',function(req,res,next){
+  req.logout();
+  res.redirect('/');
+});
+
 //route for accessing the about webpage
 app.get('/about',function(req,res,next){
   res.render('about',{page: "about",title: "Cooking genie - About",user: req.user,message: req.flash('success')});
