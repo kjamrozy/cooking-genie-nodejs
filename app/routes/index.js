@@ -45,7 +45,7 @@ var index_route = function(req, res, next) {
 /** Route which is in charge of adding new content to the user's fridge 
 @param req - HTTP request
 @param res - server response
-@param req - callback for passing request to the next function
+@param next - callback for passing request to the next function
 */
 var content_post_route = function(req,res,next){
 	//connect to the database to add food
@@ -66,7 +66,33 @@ var content_post_route = function(req,res,next){
   });
 };
 
+/** Route which is in charge of deleting content from the user's fridge 
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+*/
+var content_delete_route = function(req,res,next){
+	//connect to the database to delete food
+  pg.connect(conString,function(err,client,pg_done){
+  	//if connection failed raise internal error
+    if(err)
+      return raiseInternalError(err,client,pg_done,next);
+    //delete food from the database
+    client.query("DELETE FROM Person_product WHERE Person_product.person_id=$1 AND Person_product.person_product_id=$2",
+      [req.user.person_id,req.params.id],
+      function(err,result){
+      	//if query failed raise internal error
+        if(err)
+          return raiseInternalError(err,client,pg_done,next);
+        //release client and redirect to the main page
+        pg_done();
+        res.redirect('/');
+      });
+  });
+};
+
 router.get('/', index_route);
 router.post('/',content_post_route);
+router.delete('/content/:id',content_delete_route);
 
 module.exports = router;

@@ -45,4 +45,13 @@ $(document).ready(function(){
 		$(this).css("background-color",rgb);
 		$(this).css("border","1px solid "+rgb);
 	});
+
+	$(".close-button").each(function(index){
+		$(this).click(function(){
+			var tile = $(this).parent();
+			var item_id = tile.data("item");	
+			$.ajax({url: "/content/"+item_id,type: "DELETE"});
+			tile.remove();
+		});
+	});
 });
