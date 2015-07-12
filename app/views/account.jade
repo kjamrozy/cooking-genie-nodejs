@@ -13,16 +13,6 @@ block content
 							h1.lead= user.name+" "+user.surname
 							hr
 					.col-md-8
-						if error && error != "" 
-							.alert.alert-danger.alert-dissmiss(role='alert')
-								button(type="button",data-dismiss="alert").close x
-								p 
-									= error
-						if success && success != ""
-							.alert.alert-success.alert-dissmiss(role='alert')
-								button(type="button",data-dismiss="alert").close x
-								p 
-									= success
 						form(role="form",method="POST",action="/account")
 							.form-group
 								label(for="email") Email
