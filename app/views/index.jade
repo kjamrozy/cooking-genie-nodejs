@@ -14,7 +14,15 @@ block content
 					.panel-heading
 						h3.panel-title Your fridge
 					.panel-body#fridge-panel
-						p Empty
+						if content == ""
+							h2 Your fridge is empty
+						else
+							for food in content
+								.food-tile(data-item="#{food.person_product_id}",data-days-left="#{food.days_left}")
+									span.close-button
+										strong X
+									span.tile-title= food.name
+									img(src="#{food.img_url}").tile-img.img-responsive
 				.panel.panel-default
 					.panel-heading
 						h3.panel-title Add content to the fridge
@@ -23,7 +31,8 @@ block content
 							.form-group
 								label(for="products") Product
 								select(id="products",name="product_id").form-control
-									option(value="none") Not yet implemented
+									for product in products
+										option(value="#{product.product_id}")= product.name
 							.form-group
 								label(for="datepicker") Expiration date
 								input#datepicker(type='text',name="expiration_date").form-control
