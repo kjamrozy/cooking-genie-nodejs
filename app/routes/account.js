@@ -118,8 +118,34 @@ var account_diets_route = function(req,res,next){
   });
 };
 
+/** Deletes diet from one's account
+@param req - HTTP request
+@param res - server response
+@param next - callback for passing request to the next function
+*/
+var account_delete_diet_route = function(req,res,next){
+  pg.connect(conString,function(err,client,pg_done){
+      //raise internal error if connection failed
+      if(err)
+        return raiseInternalError(err,client,pg_done,next);
+      //delete person_diet record from database
+      client.query("DELETE FROM Person_diet WHERE person_id=$1 AND diet_id=$2",
+        [req.user.person_id,req.params.id],function(err,result){
+            //raise internal error if query failed
+            if(err)
+              return raiseInternalError(err,client,pg_done,next);
+
+            //release postgres client and redirect back to /account
+            pg_done();
+            req.flash('success',"Succesfully deleted diet!");
+            res.redirect('/account');
+        });
+  });
+};
+
 router.get('/account',account_get_route);
 router.post('/account',account_post_route);
 router.post('/account/diets',account_diets_route);
+router.get('/account/diets/:id',account_delete_diet_route);
 
 module.exports = router;

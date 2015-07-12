@@ -33,13 +33,23 @@ block content
 				.panel-heading
 					h3.panel-title My diets
 				.panel-body
-					p I'm a/an:
-					ul
+					if person_diets != ""
+						p I'm a/an:
 						for diet in person_diets
-							li= diet.name
+							.row
+								.col-md-6
+									p= diet.name
+								.col-md-6
+									a(href="/account/diets/#{diet.diet_id}") No I'm not
+					else
+						p You don't have any diets
+			.panel.panel-default
+				.panel-heading
+					h3.panel-title Add diet
+				.panel-body
 					form(role="form",method="POST",action="/account/diets")
 						.form-group
-							label(for="diet") I'm also a/an
+							label(for="diet") I'm a/an
 							select#diet(name="diet_id").form-control
 								for diet in diets
 									option(value="#{diet.diet_id}")= diet.name
