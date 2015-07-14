@@ -9,6 +9,36 @@ block content
 						h1 Meal Advisor
 						p You want to eat something and have no idea what to prepare? Good for you we can show you what tasty food you can prepare with your food. Wanna try?
 						button.btn-lg.btn-primary#advisor-button What I can cook?
+					#progress.ui-progressbar.ui-progressbar-indeterminate.hide
+					#progress_caption.hide
+						p.text-center Please wait...
+				#proposition.hide
+					#panel-prop
+						.panel.panel-default
+							.panel-heading
+								.row.panel-title
+									.col-md-2
+										span#arrow-left.glyphicon.glyphicon-arrow-left
+									.col-md-8
+										h3.text-center#title
+									.col-md-2
+										span#arrow-right.glyphicon.glyphicon-arrow-right
+							.panel-body
+								.row
+									.col-md-5
+										img#img(src="/images/default.png")
+									.col-md-7
+										.panel.panel-default#food-panel
+											.panel-heading
+												h3.panel-title
+											.panel-body
+												h4#calories Calories:
+												hr
+												h4#quantity Quantity:
+												hr
+												h4 Description:
+												p#description
+
 			.col-md-5.col-md-offset-7
 				.panel.panel-default
 					.panel-heading
@@ -19,10 +49,11 @@ block content
 						else
 							for food in content
 								.food-tile(data-item="#{food.person_product_id}",data-days-left="#{food.days_left}")
-									span.close-button
-										strong X
-									span.tile-title= food.name
-									img(src="#{food.img_url}").tile-img.img-responsive
+									img(src="#{food.img_url}").tile-img
+									div.title-bar
+										span.close-button
+											strong X
+										span.tile-title= food.name
 				.panel.panel-default
 					.panel-heading
 						h3.panel-title Add content to the fridge

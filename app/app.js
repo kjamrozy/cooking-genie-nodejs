@@ -14,6 +14,7 @@ var conString = pg.conString;
 var account = require('./routes/account');
 var routes = require('./routes/index');
 var manage = require('./routes/manage');
+var advisor = require('./routes/advisor');
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.use(function(req,res,next){
 app.use('/', routes);
 app.use(manage);
 app.use(account);
+app.use(advisor);
 
 app.get('/signout',function(req,res,next){
   req.logout();

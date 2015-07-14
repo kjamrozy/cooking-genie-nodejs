@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var pg = require('./postgres');
 var conString = pg.conString;
+var raiseInternalError = require('./auxiliary');
 
 /** Renders / (main page) GET route 
 @param req - HTTP request
@@ -18,7 +19,7 @@ var index_route = function(req, res, next) {
     var data = {user: req.user,title: "Cooking genie - Home",page: "index",stylesheet: "index.css",
 	    javascript: "index.js"};
     
-    client.query("SELECT *,EXTRACT(DAYS FROM (Person_product.expiration_date-now())) AS days_left FROM Person_product JOIN Product ON (Person_product.product_id=Product.product_id) WHERE Person_product.person_id=$1",
+    client.query("SELECT *,EXTRACT(DAYS FROM (Person_product.expiration_date-now())) AS days_left FROM Person_product JOIN Product ON (Person_product.product_id=Product.product_id) WHERE Person_product.person_id=$1 ORDER BY expiration_date ASC",
       [req.user.person_id],
       function(err,result){
       	//if query failed raise internal error

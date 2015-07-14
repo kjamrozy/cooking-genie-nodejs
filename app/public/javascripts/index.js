@@ -43,15 +43,78 @@ $(document).ready(function(){
 		
 		var rgb = "rgb("+Math.round(color[0])+","+Math.round(color[1])+","+Math.round(color[2])+")";
 		$(this).css("background-color",rgb);
-		$(this).css("border","1px solid "+rgb);
+		$(this).find(".close-button").css("background-color",rgb);
+		$(this).find(".title-bar").css("background-color",rgb);
 	});
 
 	$(".close-button").each(function(index){
 		$(this).click(function(){
-			var tile = $(this).parent();
+			//get whole tile object
+			var tile = $(this).parent().parent();
+
+			//read referenced product id and make ajax call for deleting it
 			var item_id = tile.data("item");	
 			$.ajax({url: "/content/"+item_id,type: "DELETE"});
+			//remove tile from web browser
 			tile.remove();
 		});
 	});
+	//init progress bar 
+	$("#progress").progressbar({value: false});
+
+	$("#advisor-button").click(function(){
+		//hide advisor prompt and button
+		$("#advisor-prompt").hide();
+
+		//show progress bar and its caption
+		$("#progress").removeClass("hide");
+		$("#progress_caption").removeClass("hide");
+
+		//get array of cookable products
+		$.getJSON('/advise',function(data){
+			//hide advisor jumbotron
+			$("#advisor").hide();
+
+			//show proposition panel
+			$('#proposition').removeClass("hide");
+
+			//if there isn't any cookable product then inform about that
+			if(data.length==0)
+				return $("#panel-prop").html("<center><p>There nothing that you can cook! You'd better go shoping.</p></center>");
+
+			var it=0;//current displayed product
+
+			//auxiliary function for dynamic replacing proposed product
+			var showProduct = function(){
+				$('#img').attr('src',data[it].img_url);
+				$('#title').html(data[it].name);
+				$('#calories').html("Calories: "+data[it].calories);
+				$('#quantity').html("Quantity: "+data[it].quantity+data[it].quantity_magnitude);
+				$('#description').html(data[it].description);
+			};
+			//now show 1st proposed product
+			showProduct();
+			//by default hide all arrows
+			$("#arrow-right").hide();
+			$("#arrow-left").hide();
+
+			if(data.length>1)
+				$("#arrow-right").show();
+
+			$("#arrow-left").click(function(){
+				it--;//move pointer to the left product
+				$("#arrow-right").show();//show right arrow since we've just moved here from that one
+				if(it==0) $("#arrow-left").hide();//hide left arrow it we're at the very 1st product
+				showProduct();//replace product info in the panel
+			});
+
+			//same idea like before
+			$("#arrow-right").click(function(){
+				it++;
+				$("#arrow-left").show();
+				if(it==data.length-1) $("#arrow-right").hide();
+				showProduct();
+			});
+		});
+		});
 });
