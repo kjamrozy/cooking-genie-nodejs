@@ -15,6 +15,7 @@ var account = require('./routes/account');
 var routes = require('./routes/index');
 var manage = require('./routes/manage');
 var advisor = require('./routes/advisor');
+var products = require('./routes/products');
 
 var app = express();
 
@@ -59,6 +60,7 @@ app.use('/', routes);
 app.use(manage);
 app.use(account);
 app.use(advisor);
+app.use(products);
 
 app.get('/signout',function(req,res,next){
   req.logout();
