@@ -296,9 +296,6 @@ router.post('/products',products_post_route);
 router.post('/products/recipe',products_recipe_route);
 router.post('/substances',substances_route);
 router.post('/products/substances',productes_substances_route);
-router.get('/products/:id',function(req,res,next){
-	res.send("Not yet implemented!");
-});
 router.post('/diet',diet_post_route);
 router.post('/diet/restriction',restriction_post_route);
 

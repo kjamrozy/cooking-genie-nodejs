@@ -21,10 +21,6 @@
 #arrow-right{
 	float: right;font-size: 50px;
 }
-#img{
-	border: 3px double black;
-	width:100%;
-}
 #fridge-panel{
 	overflow-y: scroll;
 	height: 60vh;

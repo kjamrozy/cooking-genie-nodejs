@@ -57,6 +57,12 @@ var search_route = function(req,res,next){
 	});
 };
 
+var product_get_route = function(req,res,next){
+	res.render('product',{title: "Cooking genie - Product",user: req.user});
+}
+
+
+router.get('/products/:id',product_get_route);
 router.get(/\/products\.([\w]+)/,products_get_route);
 router.post('/search',search_route);
 

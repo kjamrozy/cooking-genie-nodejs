@@ -37,3 +37,7 @@ body{
 	overflow: hidden;
 	text-shadow: 1px 1px #aaaaaa;
 }
+#img{
+	border: 3px double black;
+	width:100%;
+}
