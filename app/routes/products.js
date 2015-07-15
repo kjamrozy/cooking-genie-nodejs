@@ -57,8 +57,48 @@ var search_route = function(req,res,next){
 	});
 };
 
-var product_get_route = function(req,res,next){
-	res.render('product',{title: "Cooking genie - Product",user: req.user});
+var product_get_route = function(req,res,next){	//connect to the database
+  pg.connect(conString,function(err,client,pg_done){
+		//raise internal error if connection failed
+	  if(err)
+	    	return raiseInternalError(err,client,pg_done,next);
+
+	  //query for product with specified id
+    client.query("SELECT * FROM Product WHERE product_id = $1", [req.params.id],function(err,result){
+      //raise internal error if query failed
+		  if(err)
+		    return raiseInternalError(err,client,pg_done,next);
+
+		  //raise not found error if there is no rows
+      if(result.rowCount==0){
+        pg_done();
+        var error = new Error('Not found');
+        error.status = 404
+        error.details = details;
+        return next(error);
+      }
+      var product = result.rows[0];
+      //perform natural join to get all ingredients(possibly none) required to craft product
+      client.query(
+        "SELECT product_recipe.ingredient_product_id AS product_id,"+
+        "sub_prod.name AS name,"+
+        "sub_prod.quantity_magnitude AS quantity_magnitude,"+
+        "product_recipe.quantity AS quantity "+
+        "FROM product JOIN product_recipe ON (product.product_id=product_recipe.subject_product_id)"+
+        "JOIN product as sub_prod ON (product_recipe.ingredient_product_id=sub_prod.product_id) WHERE product.product_id=$1",
+        [req.params.id],
+        function(err,result){
+		      //raise internal error if query failed
+			    if(err)
+			    	return raiseInternalError(err,client,pg_done,next);
+
+			    //release client and render webpage
+		      pg_done();
+			    res.render('product',{title: "Cooking genie - "+product.name,user: req.user,
+	          	  product: product,recipe: result.rows});
+        });
+    });
+  });
 }
 
 

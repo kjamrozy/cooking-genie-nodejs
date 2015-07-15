@@ -11,25 +11,34 @@ block content
 					.panel-heading
 						h2.panel-title Product
 					.panel-body
-						h5 Name: product name
+						h5 Name: 
+							= product.name 
 						hr
-						h5 Quantity: 100g
+						h5 Quantity: 
+							= product.quantity
+							= product.quantity_magnitude
 						hr 
-						h5 Calories: 350
+						h5 Calories: 
+							= product.calories
 				.panel.panel-default
 					.panel-heading
 						h2.panel-title Description
 					.panel-body
-						h5 Description
-				.recipe.panel-default.panel(style="padding:0;")
-					.panel-heading
-						h2.panel-title Recipe
-					.panel-body(style="margin:0;padding:0;")
-						table.table.table-bordered.table-condense(style="margin:0;padding:0;")
-							tr(style="background-color: rgb(240,240,240);")
-								td Name
-								td Quantity
-							tr
-								td sth
-								td 100g
+						h5= product.description
+				if recipe.length>0
+					.recipe.panel-default.panel(style="padding:0;")
+						.panel-heading
+							h2.panel-title Recipe
+						.panel-body(style="margin:0;padding:0;")
+							table.table.table-bordered.table-condense(style="margin:0;padding:0;")
+								tr(style="background-color: rgb(240,240,240);")
+									td Name
+									td Quantity
+								for ingredient in recipe
+									tr
+										td 
+											= ingredient.name
+										td 
+											= ingredient.quantity
+											= ingredient.quantity_magnitude
 
