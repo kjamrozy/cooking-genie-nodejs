@@ -27,8 +27,9 @@ block extended_layout
 								input(type="text",placeholder="Search",name="query").form-control
 							button(type="submit").btn.btn-default Submit
 						ul.nav.navbar-nav
-							li(class= page == "manage" ? "active" : undefined)
-								a("href"="/manage") Manage
+							if user.admin
+								li(class= page == "manage" ? "active" : undefined)
+									a("href"="/manage") Manage
 							li(class= page == "about" ? "active" : undefined)
 								a(href="/about") About
 						ul.nav.navbar-nav.navbar-right

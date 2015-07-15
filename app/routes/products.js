@@ -74,7 +74,6 @@ var product_get_route = function(req,res,next){	//connect to the database
         pg_done();
         var error = new Error('Not found');
         error.status = 404
-        error.details = details;
         return next(error);
       }
       var product = result.rows[0];

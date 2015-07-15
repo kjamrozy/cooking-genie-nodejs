@@ -18,7 +18,7 @@ var advise_route = function(req,res,next){
       //we need to get product_id,quantity and its magnitude,calories,desc and img 
       //for each product that has recipe and is a meal
       var query = client.query(
-        "SELECT Product.product_id AS product,Product.quantity_magnitude,"+
+        "SELECT Product.product_id AS product,Product.quantity_magnitude,Product.name,"+
         "Product.calories,Product.quantity,Product.description,Product.img_url"+
         " FROM Product JOIN"+
         " Product_recipe ON (product.product_id=product_recipe.subject_product_id)"+

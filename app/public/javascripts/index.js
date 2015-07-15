@@ -87,7 +87,7 @@ $(document).ready(function(){
 			//auxiliary function for dynamic replacing proposed product
 			var showProduct = function(){
 				$('#img').attr('src',data[it].img_url);
-				$('#title').html(data[it].name);
+				$('#title').text(data[it].name);
 				$('#calories').html("Calories: "+data[it].calories);
 				$('#quantity').html("Quantity: "+data[it].quantity+data[it].quantity_magnitude);
 				$('#description').html(data[it].description);

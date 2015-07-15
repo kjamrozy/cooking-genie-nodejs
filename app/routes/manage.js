@@ -291,12 +291,20 @@ var restriction_post_route = function(req,res,next){
 	});
 };
 
-router.get('/manage',manage_get_route);
-router.post('/products',products_post_route);
-router.post('/products/recipe',products_recipe_route);
-router.post('/substances',substances_route);
-router.post('/products/substances',productes_substances_route);
-router.post('/diet',diet_post_route);
-router.post('/diet/restriction',restriction_post_route);
+var checkIsAdmin = function(req,res,next){
+	if(req.user.admin)
+		return next();
+  var error = new Error('Not found');
+  error.status = 404
+  next(error);
+};
+
+router.get('/manage',checkIsAdmin,manage_get_route);
+router.post('/products',checkIsAdmin,products_post_route);
+router.post('/products/recipe',checkIsAdmin,products_recipe_route);
+router.post('/substances',checkIsAdmin,substances_route);
+router.post('/products/substances',checkIsAdmin,productes_substances_route);
+router.post('/diet',checkIsAdmin,diet_post_route);
+router.post('/diet/restriction',checkIsAdmin,restriction_post_route);
 
 module.exports = router;
