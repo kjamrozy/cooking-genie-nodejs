@@ -6,9 +6,10 @@ block content
 			.panel-heading
 				h2 Products
 			.panem-body
-				.food-tile
-					a(href="#")
-						img(src="/images/default.png").tile-img
-					.title-bar
-						span.tile-title Dummy product
+				for product in products
+					.food-tile
+						a(href="products/#{product.product_id}")
+							img(src="#{product.img_url}").tile-img
+						.title-bar
+							span.tile-title= product.name
 					
